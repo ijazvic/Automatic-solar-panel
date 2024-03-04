@@ -1,0 +1,71 @@
+// Ilija Jazvić //
+// Završni rad //
+// Automatski solarni sustav //
+// Srednja škola Pere Zečevića //
+
+#include <Servo.h> // Uključivanje knjižnice za servo motor SG90
+Servo servohorizontal; // Definiranje granica horizontalnog servo motora
+int ServoHoriz = 0;  // Inicijalizacija varijable ServoHoriz i postavljanje na 0° (početni položaj)
+int ServoHorizLimitHigh = 100;  // Definiranje gornje granice horizontalnog servo motora, 160°
+int ServoHorizLimitLow = 40; // Definiranje donje granice horizontalnog servo motora, 20°
+
+Servo servovertikal; // Definiranje granica vertikalnog servo motora
+int ServoVerti = 0;  // Inicijalizacija varijable ServoVerti i postavljanje na 0° (početni položaj)
+int ServoVertiLimitHigh = 110; // Definiranje gornje granice vertikalnog servo motora, 160°
+int ServoVertiLimitLow = 20;  // Definiranje donje granice vertikalnog servo motora, 20°
+
+// Definiranje fotootpornika (LDRs)
+int ldrGLijevo = 1;  // Gore lijevi fotootpornik
+int ldrGDesno = 3;   // Gore desni fotootpornik
+int ldrDLijevo = 0;  // Dolje lijevi fotootpornik
+int ldrDDesno = 2;  // Dolje desni fotootpornik
+
+void setup (){
+servohorizontal.attach(10); // Spajanje horizontalnog servo motora SG90 na Arduino Uno, pin 10
+servohorizontal.write(0); // Postavljanje početnog položaja horizontalnog servo motora, 90°
+servovertikal.attach(9);  // Spajanje vertikalnog servo motora SG90 na Arduino Uno, pin 9
+servovertikal.write(0); // Postavljanje početnog položaja vertikalnog servo motora, 90°
+delay(100);}
+
+void loop(){
+ServoHoriz = servohorizontal.read();
+ServoVerti = servovertikal.read();
+
+// Snimanje analognih vrijednosti svakog fotootpornika
+int GLijevo = analogRead(ldrGLijevo);  // Analogna vrijednost gore lijevog fotootpornika
+int GDesno = analogRead(ldrGDesno); // Analogna vrijednost gore desnog fotootpornika
+int DLijevo = analogRead(ldrDLijevo); // Analogna vrijednost dolje lijevog fotootpornika
+int DDesno = analogRead(ldrDDesno); // Analogna vrijednost dolje desnog fotootpornika
+
+// Izračun prosjeka između fotootpornika //
+int prosjekGore = (GLijevo + GDesno) / 2;  // Prosjek između gornjih fotootpornika
+int prosjekDolje = (DLijevo + DDesno) / 2;  // Prosjek između donjih fotootpornika
+int prosjekLijevo = (GLijevo + DLijevo) / 2;  // Prosjek između lijevih fotootpornika
+int prosjekDesno = (GDesno + DDesno) / 2;  // Prosjek između desnih fotootpornika
+
+if (prosjekGore < prosjekDolje){ // Ako je vrijednost gornjeg fotootpornika manja od vrijednosti donjeg fotootpornika
+  servovertikal.write(ServoVerti +1);  // Pomak vertikalnog servo motora za 1° prema dolje
+  if (ServoVerti > ServoVertiLimitHigh){
+    ServoVerti = ServoVertiLimitHigh;}
+  delay(10);}
+else if (prosjekDolje < prosjekGore){ // Ako je vrijednost donjeg fotootpornika manja od vrijednosti gornjeg fotootpornika
+  servovertikal.write(ServoVerti -1); // Pomak vertikalnog servo motora za 1° prema gore
+  if (ServoVerti < ServoVertiLimitLow){
+ServoVerti = ServoVertiLimitLow;}
+delay(10);}
+else{
+servovertikal.write(ServoVerti);}
+if (prosjekLijevo > prosjekDesno){ // Ako je vrijednost lijevog fotootpornika veća od vrijednosti desnog fotootpornika
+  servohorizontal.write(ServoHoriz +1); // Pomak horizontalnog servo motora za 1° u lijevo
+  if (ServoHoriz > ServoHorizLimitHigh){
+  ServoHoriz = ServoHorizLimitHigh;}
+  delay(10);}
+else if (prosjekDesno > prosjekLijevo){// Ako je vrijednost desnog fotootpornika veća od vrijednosti lijevog fotootpornika
+  servohorizontal.write(ServoHoriz -1); // Pomak horizontalnog servo motora za 1° u desno
+  if (ServoHoriz < ServoHorizLimitLow){
+  ServoHoriz = ServoHorizLimitLow;}
+  delay(10);}
+else{
+  servohorizontal.write(ServoHoriz);}
+delay(50); // Čekanje od 50ms (0.05s) do ponovnog pokretanja petlje loop}
+// Kraj //
