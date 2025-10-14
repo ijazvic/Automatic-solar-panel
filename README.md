@@ -52,7 +52,7 @@ This simple feedback loop results in **25–40% higher energy efficiency** compa
 
  Full source code is available in this repository.
 
----
+
 
 ##  Example Code Snippet
 
@@ -90,5 +90,7 @@ Connect to an IoT dashboard for remote monitoring and data visualization
 
 
 
-## 📸 Project Preview
+##  Project Preview
 
+<img width="343" height="409" alt="image" src="https://github.com/user-attachments/assets/16461b5f-14dd-4669-b463-2d1c8c30aa69" />
+<img width="343" height="409" alt="image" src="https://github.com/user-attachments/assets/87dd18a9-027c-489f-9ed1-5300374e8119" />
